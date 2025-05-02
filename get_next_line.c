@@ -6,32 +6,32 @@
 /*   By: molapoug <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/01 17:31:50 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/02 19:35:18 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 #include "get_next_line.h"
 
-char	*get_line(char *str)
+int	count_lines(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != '\n')
 		i++;
-	str = malloc(sizeof(char *) * (i + 1));
-	if (!str)
-		return (NULL);
-	str = '\0';
-	return (str);
+	return (i);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*line;
 	char	buffer[BUFFER_SIZE + 1];
-	int		bytes_read;
-	int		i;
+	char	*line;
+	int		bytes_read, i = 0;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -45,22 +45,21 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	buffer[bytes_read] = '\0';
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buffer[i] && buffer[i] != '\n' || buffer[i] && buffer[i] != '\0')
+	//while (buffer[i] && buffer[i] != '\n')
 	{
 		line[i] = buffer[i];
 		i++;
 	}
-	//if (buffer[i] == '\n')
-	//	line[i++] = '\n';
-	get_line(buffer);
+	if (buffer[i] == '\n')
+		line[i++] = '\n';
 	line[i] = '\0';
 	return (line);
 }
 
 int main(int ac, char **av)
 {
-	int	fd;
+	int		fd;
 	char	*line;
 
 	if (ac != 2)
@@ -71,6 +70,7 @@ int main(int ac, char **av)
 	line = get_next_line(fd);
 	if (line)
 	{
+		//ft_putstr_fd(line, fd);
 		printf("%s", line);
 		free(line);
 	}

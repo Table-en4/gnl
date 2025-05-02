@@ -19,9 +19,9 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strjoin(const char *first, const char *second)
+char	*ft_strjoin(char *first, char *second)
 {
-	unsigned int	j;
+	int	j;
 	int		i;
 	char		*str;
 
@@ -38,6 +38,19 @@ char	*ft_strjoin(const char *first, const char *second)
 	i = -1;
 	while (second[++i])
 		str[j++] = second[i];
-	str[j] = '\0';
-	return (str);
+	str[ft_strlen(first) + ft_strlen(second)] = '\0';
+	return (free(first), str);
+}
+
+char	*get_lines(char *str)
+{
+	int	sizeof_str_line;
+	char	*dst;
+
+	while (str[sizeof_str_line] != '\n')
+		sizeof_str_line++;
+	dst = malloc(sizeof(char *) * (sizeof_str_line + 1));
+	if (!dst)
+		return (NULL);
+	return (dst);	
 }
