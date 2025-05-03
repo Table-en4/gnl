@@ -6,7 +6,7 @@
 /*   By: molapoug <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/02 19:35:18 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/03 14:28:02 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,29 +31,20 @@ char	*get_next_line(int fd)
 {
 	char	buffer[BUFFER_SIZE + 1];
 	char	*line;
-	int		bytes_read, i = 0;
+	int		bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line = malloc(BUFFER_SIZE + 1);
-	if (!line)
-		return (NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read <= 0)
-	{
-		free(line);
 		return (NULL);
+	//buffer[bytes_read] = '\0';
+	while (buffer[bytes_read] != '\0')
+	{
+		line = get_lines(buffer);
+		bytes_read++;
 	}
 	buffer[bytes_read] = '\0';
-	while (buffer[i] && buffer[i] != '\n' || buffer[i] && buffer[i] != '\0')
-	//while (buffer[i] && buffer[i] != '\n')
-	{
-		line[i] = buffer[i];
-		i++;
-	}
-	if (buffer[i] == '\n')
-		line[i++] = '\n';
-	line[i] = '\0';
 	return (line);
 }
 

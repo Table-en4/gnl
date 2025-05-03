@@ -2,10 +2,10 @@
 NAME = get_next_line
 
 # Compilateur
-CC = cc
+CC = cc -g
 
 # Options de compilation
-CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=42
+CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=75
 
 # Fichiers source
 SRC = get_next_line.c get_next_line_utils.c
