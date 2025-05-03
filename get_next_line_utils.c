@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/30 19:35:19 by molapoug          #+#    #+#             */
+/*   Updated: 2025/05/03 19:47:01 by molapoug         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 void	ft_putstr_fd(char *str, int fd)
@@ -26,7 +38,7 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 	i = 0;
 	if (size == 0)
 		return (ft_strlen(src));
-	while (src[i] != '\0' && i < (size - 1))
+	while (src[i] && i < (size - 1))
 	{
 		dst[i] = src[i];
 		i++;
@@ -37,40 +49,41 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 
 char	*ft_strjoin(char *first, char *second)
 {
-	int	j;
 	int		i;
-	char		*str;
+	int		j;
+	char	*str;
 
-	if (!first && second)
+	if (!first || !second)
 		return (NULL);
 	str = malloc(sizeof(char) * (ft_strlen(first) + ft_strlen(second) + 1));
 	if (!str)
 		return (NULL);
-	i = -1;
+	i = 0;
 	j = 0;
-	while (first[++i])
-		str[j++] = first[i];
-	str[j] = '\n';
-	i = -1;
-	while (second[++i])
-		str[j++] = second[i];
-	//str[ft_strlen(first) + ft_strlen(second)] = '\0';
-	return (str[j] = '\0', str);
+	while (first[i])
+		str[j++] = first[i++];
+	i = 0;
+	while (second[i])
+		str[j++] = second[i++];
+	str[j] = '\0';
+	return (str);
 }
 
 char	*get_lines(char *str)
 {
-	int	sizeof_str_line;
-	char	*dst;
+	int		len;
+	char	*line;
 
-	sizeof_str_line = 0;
-	while (str[sizeof_str_line] != '\n')
-		sizeof_str_line++;
-	if (sizeof_str_line == '\n')
-		sizeof_str_line++;
-	dst = malloc(sizeof(char) * (sizeof_str_line + 1));
-	if (!dst)
+	if (!str || !str[0])
 		return (NULL);
-	ft_strlcpy(dst, str, sizeof_str_line + 1);
-	return (dst);
+	len = 0;
+	while (str[len] && str[len] != '\n')
+		len++;
+	if (str[len] == '\n')
+		len++;
+	line = malloc(sizeof(char) * (len + 1));
+	if (!line)
+		return (NULL);
+	ft_strlcpy(line, str, len + 1);
+	return (line);
 }

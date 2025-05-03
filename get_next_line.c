@@ -3,17 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: molapoug <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/03 14:28:02 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/03 19:44:08 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
 
 #include "get_next_line.h"
 
@@ -38,35 +33,36 @@ char	*get_next_line(int fd)
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read <= 0)
 		return (NULL);
-	//buffer[bytes_read] = '\0';
-	while (buffer[bytes_read] != '\0')
-	{
-		line = get_lines(buffer);
-		bytes_read++;
-	}
+	buffer[bytes_read] = '\0';
+	line = get_lines(buffer);
 	buffer[bytes_read] = '\0';
 	return (line);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	int		fd;
 	char	*line;
 
 	if (ac != 2)
-		return (printf("fais : %s +nom gros debile\n", av[0]), 1);
+	{
+		write(2, "Usage: ./a.out <filename>\n", 27);
+		return (1);
+	}
 	fd = open(av[1], O_RDONLY);
 	if (fd < 0)
-		return (perror("erreur ouverture fichier"), 1);
-	line = get_next_line(fd);
-	if (line)
 	{
-		//ft_putstr_fd(line, fd);
+		perror("Erreur ouverture fichier");
+		return (1);
+	}
+	line = get_next_line(fd);
+	while (line)
+	{
 		printf("%s", line);
 		free(line);
+		line = get_next_line(fd);
 	}
-	else
-		printf("get_next_line a find NULL.\n");
 	close(fd);
+	return (0);
 }
 
