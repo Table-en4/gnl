@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/04 11:29:22 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/04 11:46:53 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ char	*update_stash(char *stash)
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
-	if (!stash[i]) // Pas de '\n', on a tout lu
+	if (!stash[i])
 	{
 		free(stash);
 		return (NULL);
 	}
-	i++; // Inclure le '\n' pour commencer après
+	i++;
 	new_stash = malloc(ft_strlen(stash + i) + 1);
 	if (!new_stash)
 		return (NULL);
@@ -82,9 +82,9 @@ char	*get_next_line(int fd)
 	if (!stash || stash[0] == '\0')
 		return (NULL);
 	line = get_lines(stash);
-	return (stash = update_stash(stash) ,line);
+	stash = update_stash(stash);
+	return (free(stash), line);
 }
-
 
 int	main(int ac, char **av)
 {

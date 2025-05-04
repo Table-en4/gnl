@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:35:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/04 11:28:32 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/04 11:49:04 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	*ft_strjoin(char *first, char *second)
 	while (second[i])
 		str[j++] = second[i++];
 	str[j] = '\0';
-	free(first);
+	//free(first);
 	return (str);
 }
 
