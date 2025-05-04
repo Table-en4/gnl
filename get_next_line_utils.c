@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:35:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/03 19:47:01 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/04 11:28:32 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,22 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+char	*ft_strchr(const char *str, int c)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == (char) c)
+			break ;
+		i++;
+	}
+	if (str[i] == (char) c)
+		return ((char *) str + i);
+	return (NULL);
+}
+
 size_t	ft_strlcpy(char *dst, char *src, size_t size)
 {
 	size_t	i;
@@ -47,15 +63,39 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 	return (ft_strlen(src));
 }
 
+char	*ft_strdup(char *s)
+{
+	int		i = 0;
+	char	*dup;
+
+	while (s[i])
+		i++;
+	dup = malloc(i + 1);
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
 char	*ft_strjoin(char *first, char *second)
 {
 	int		i;
 	int		j;
 	char	*str;
 
-	if (!first || !second)
+	if (!first && !second)
 		return (NULL);
-	str = malloc(sizeof(char) * (ft_strlen(first) + ft_strlen(second) + 1));
+	if (!first)
+		return (ft_strdup(second));
+	if (!second)
+		return (ft_strdup(first));
+	str = malloc(ft_strlen(first) + ft_strlen(second) + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -66,13 +106,14 @@ char	*ft_strjoin(char *first, char *second)
 	while (second[i])
 		str[j++] = second[i++];
 	str[j] = '\0';
+	free(first);
 	return (str);
 }
 
 char	*get_lines(char *str)
 {
 	int		len;
-	char	*line;
+	static char	*line;
 
 	if (!str || !str[0])
 		return (NULL);
@@ -85,5 +126,6 @@ char	*get_lines(char *str)
 	if (!line)
 		return (NULL);
 	ft_strlcpy(line, str, len + 1);
+	//ft_strjoin(line, str + len);
 	return (line);
 }

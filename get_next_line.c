@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/03 19:44:08 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/04 11:29:22 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,82 @@
 
 int	count_lines(char *str)
 {
-	int	i;
+	int	i = 0;
+
+	if (!str)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	*update_stash(char *stash)
+{
+	int		i;
+	int		j;
+	char	*new_stash;
+
+	if (!stash)
+		return (NULL);
 
 	i = 0;
-	while (str[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 		i++;
-	return (i);
+	if (!stash[i]) // Pas de '\n', on a tout lu
+	{
+		free(stash);
+		return (NULL);
+	}
+	i++; // Inclure le '\n' pour commencer après
+	new_stash = malloc(ft_strlen(stash + i) + 1);
+	if (!new_stash)
+		return (NULL);
+	j = 0;
+	while (stash[i])
+		new_stash[j++] = stash[i++];
+	new_stash[j] = '\0';
+	free(stash);
+	return (new_stash);
 }
+
 
 char	*get_next_line(int fd)
 {
-	char	buffer[BUFFER_SIZE + 1];
-	char	*line;
-	int		bytes_read;
+	static char	*stash;
+	char		*buffer;
+	char		*line;
+	int			bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if (bytes_read <= 0)
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
 		return (NULL);
-	buffer[bytes_read] = '\0';
-	line = get_lines(buffer);
-	buffer[bytes_read] = '\0';
-	return (line);
+	bytes_read = 1;
+	while (!count_lines(stash) && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (free(buffer), NULL);
+		buffer[bytes_read] = '\0';
+		stash = ft_strjoin(stash, buffer);
+	}
+	free(buffer);
+	if (!stash || stash[0] == '\0')
+		return (NULL);
+	line = get_lines(stash);
+	return (stash = update_stash(stash) ,line);
 }
+
 
 int	main(int ac, char **av)
 {
 	int		fd;
-	char	*line;
+	static char	*line;
 
 	if (ac != 2)
 	{
