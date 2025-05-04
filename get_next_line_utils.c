@@ -6,74 +6,48 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:35:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/04 11:49:04 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:41:12 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	ft_putstr_fd(char *str, int fd)
+int	ft_strlen(char *s)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-		write(fd, &str[i++], 1);
-}
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
+	int	i = 0;
+	while (s && s[i])
 		i++;
 	return (i);
 }
 
-char	*ft_strchr(const char *str, int c)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == (char) c)
-			break ;
-		i++;
-	}
-	if (str[i] == (char) c)
-		return ((char *) str + i);
-	return (NULL);
-}
-
 size_t	ft_strlcpy(char *dst, char *src, size_t size)
 {
-	size_t	i;
-
-	i = 0;
-	if (size == 0)
-		return (ft_strlen(src));
-	while (src[i] && i < (size - 1))
+	size_t	i = 0;
+	if (!dst || !src)
+		return (0);
+	if (size)
 	{
-		dst[i] = src[i];
-		i++;
+		while (src[i] && i < size - 1)
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	dst[i] = '\0';
-	return (ft_strlen(src));
+	while (src[i])
+		i++;
+	return (i);
 }
 
 char	*ft_strdup(char *s)
 {
-	int		i = 0;
+	int	len = ft_strlen(s);
 	char	*dup;
+	int	i = 0;
 
-	while (s[i])
-		i++;
-	dup = malloc(i + 1);
+	dup = malloc(len + 1);
 	if (!dup)
 		return (NULL);
-	i = 0;
 	while (s[i])
 	{
 		dup[i] = s[i];
@@ -83,49 +57,63 @@ char	*ft_strdup(char *s)
 	return (dup);
 }
 
-char	*ft_strjoin(char *first, char *second)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	int		i;
-	int		j;
-	char	*str;
+	char	*res;
+	int	l1 = ft_strlen(s1);
+	int	l2 = ft_strlen(s2);
+	int	i = 0;
+	int	j = 0;
 
-	if (!first && !second)
+	res = malloc(l1 + l2 + 1);
+	if (!res)
 		return (NULL);
-	if (!first)
-		return (ft_strdup(second));
-	if (!second)
-		return (ft_strdup(first));
-	str = malloc(ft_strlen(first) + ft_strlen(second) + 1);
-	if (!str)
-		return (NULL);
+	while (s1 && s1[i])
+		res[j++] = s1[i++];
 	i = 0;
-	j = 0;
-	while (first[i])
-		str[j++] = first[i++];
-	i = 0;
-	while (second[i])
-		str[j++] = second[i++];
-	str[j] = '\0';
-	//free(first);
-	return (str);
+	while (s2 && s2[i])
+		res[j++] = s2[i++];
+	res[j] = '\0';
+	return (res);
 }
 
-char	*get_lines(char *str)
+char	*extract_line(char *s)
 {
-	int		len;
-	static char	*line;
+	int	i = 0;
+	char	*line;
 
-	if (!str || !str[0])
+	if (!s)
 		return (NULL);
-	len = 0;
-	while (str[len] && str[len] != '\n')
-		len++;
-	if (str[len] == '\n')
-		len++;
-	line = malloc(sizeof(char) * (len + 1));
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (s[i] == '\n')
+		i++;
+	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
-	ft_strlcpy(line, str, len + 1);
-	//ft_strjoin(line, str + len);
+	ft_strlcpy(line, s, i + 1);
 	return (line);
+}
+
+char	*update_stash(char *s)
+{
+	int	i = 0;
+	int	j = 0;
+	char	*new;
+
+	if (!s)
+		return (NULL);
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (!s[i])
+		return (free(s), NULL);
+	i++;
+	new = malloc(ft_strlen(s + i) + 1);
+	if (!new)
+		return (NULL);
+	while (s[i])
+		new[j++] = s[i++];
+	new[j] = '\0';
+	free(s);
+	return (new);
 }
