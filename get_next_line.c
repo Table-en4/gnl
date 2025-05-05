@@ -6,28 +6,28 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/04 15:00:55 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:05:05 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*extract_line(char *s)
+char	*extract_line(char *str)
 {
 	int		i;
 	char	*line;
 
 	i = 0;
-	if (!s)
+	if (!str)
 		return (NULL);
-	while (s[i] && s[i] != '\n')
+	while (str[i] && str[i] != '\n')
 		i++;
-	if (s[i] == '\n')
+	if (str[i] == '\n')
 		i++;
 	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
-	ft_strlcpy(line, s, i + 1);
+	ft_strlcpy(line, str, i + 1);
 	return (line);
 }
 
@@ -44,7 +44,7 @@ int	newline(char *s)
 	return (0);
 }
 
-char *read_and_build_stash(int fd, char *stash)
+char *read_stash(int fd, char *stash)
 {
     char *buffer;
     char *tmp;
@@ -70,6 +70,31 @@ char *read_and_build_stash(int fd, char *stash)
     return (stash);
 }
 
+char	*update_stash(char *str)
+{
+	int	i;
+	int	j;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	if (!str)
+		return (NULL);
+	while (str[i] && str[i] != '\n')
+		i++;
+	if (!str[i])
+		return (free(str), NULL);
+	i++;
+	new = malloc(ft_strlen(str + i) + 1);
+	if (!new)
+		return (NULL);
+	while (str[i])
+		new[j++] = str[i++];
+	new[j] = '\0';
+	free(str);
+	return (new);
+}
+
 char *get_next_line(int fd)
 {
     static char *stash;
@@ -77,7 +102,7 @@ char *get_next_line(int fd)
 
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);
-    stash = read_and_build_stash(fd, stash);
+    stash = read_stash(fd, stash);
     if (!stash)
         return (NULL);
     

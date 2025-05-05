@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 14:26:37 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/04 14:29:04 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:08:00 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int	ft_strlen(char *str);
-void	ft_putstr_fd(char *str, int fd);
+int	ft_strlen(char *s);
 size_t	ft_strlcpy(char *dst, char *src, size_t size);
 char	*ft_strjoin(char *first, char *second);
-int	has_newline(char *s);
 char	*ft_strdup(char *s);
+char *read_stash(int fd, char *stash);
 char	*update_stash(char *stash);
 char	*extract_line(char *s);
+int	    newline(char *s);
+char    *get_next_line(int fd);
