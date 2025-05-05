@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/05 10:05:05 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:51:51 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,36 +44,36 @@ int	newline(char *s)
 	return (0);
 }
 
-char *read_stash(int fd, char *stash)
+char	*read_stash(int fd, char *stash)
 {
-    char *buffer;
-    char *tmp;
-    int  rd;
+	char	*buffer;
+	char	*tmp;
+	int		rd;
 
-    buffer = malloc(BUFFER_SIZE + 1);
-    if (!buffer)
-        return (NULL);
-    rd = 1;
-    while (!newline(stash) && rd > 0)
-    {
-        rd = read(fd, buffer, BUFFER_SIZE);
-        if (rd < 0)
-            return (free(buffer), NULL);
-        buffer[rd] = '\0';
-        tmp = ft_strjoin(stash, buffer);
-        free(stash);
-        stash = tmp;
-    }
-    free(buffer);
-    if (!stash || !*stash)
-        return (free(stash), NULL);
-    return (stash);
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	rd = 1;
+	while (!newline(stash) && rd > 0)
+	{
+		rd = read(fd, buffer, BUFFER_SIZE);
+		if (rd < 0)
+			return (free(buffer), NULL);
+		buffer[rd] = '\0';
+		tmp = ft_strjoin(stash, buffer);
+		free(stash);
+		stash = tmp;
+	}
+	free(buffer);
+	if (!stash || !*stash)
+		return (free(stash), NULL);
+	return (stash);
 }
 
 char	*update_stash(char *str)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*new;
 
 	i = 0;
@@ -95,30 +95,29 @@ char	*update_stash(char *str)
 	return (new);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    static char *stash;
-    char        *line;
+	static char	*stash;
+	char		*line;
 
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return (NULL);
-    stash = read_stash(fd, stash);
-    if (!stash)
-        return (NULL);
-    
-    line = extract_line(stash);
-    stash = update_stash(stash);
-    return (line);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = read_stash(fd, stash);
+	if (!stash)
+		return (NULL);
+	line = extract_line(stash);
+	stash = update_stash(stash);
+	return (line);
 }
 
-int	main(int ac, char **av)
+/*int	main(int ac, char **av)
 {
-	int		fd;
+	int			fd;
 	static char	*line;
 
 	if (ac != 2)
 	{
-		write(2, "Usage: ./a.out <filename>\n", 27);
+		printf("%s\n", "faut faire ./a.out + nom du fichier\n");
 		return (1);
 	}
 	fd = open(av[1], O_RDONLY);
@@ -136,5 +135,4 @@ int	main(int ac, char **av)
 	}
 	close(fd);
 	return (0);
-}
-
+}*/

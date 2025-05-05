@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:35:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/05 10:05:25 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:44:18 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 
 char	*ft_strdup(char *s)
 {
-	int	len;
+	int		len;
+	int		i;
 	char	*dup;
-	int	i;
 
 	len = ft_strlen(s);
 	i = 0;
@@ -66,10 +66,10 @@ char	*ft_strdup(char *s)
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
-	int	l1;
-	int	l2;
-	int	i;
-	int	j;
+	int		l1;
+	int		l2;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
