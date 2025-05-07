@@ -1,3 +1,0 @@
-test de mon fichier txt
-ca s est a la ligne
-test

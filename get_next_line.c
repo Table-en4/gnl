@@ -6,7 +6,7 @@
 /*   By: molapoug <molapoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 19:34:19 by molapoug          #+#    #+#             */
-/*   Updated: 2025/05/05 10:51:51 by molapoug         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:10:47 by molapoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ char	*read_stash(int fd, char *stash)
 	{
 		rd = read(fd, buffer, BUFFER_SIZE);
 		if (rd < 0)
-			return (free(buffer), NULL);
+		{
+			free(buffer);
+			return (free(stash), NULL);
+		}
 		buffer[rd] = '\0';
 		tmp = ft_strjoin(stash, buffer);
 		free(stash);
@@ -75,6 +78,7 @@ char	*update_stash(char *str)
 	int		i;
 	int		j;
 	char	*new;
+	int		len;
 
 	i = 0;
 	j = 0;
@@ -85,9 +89,10 @@ char	*update_stash(char *str)
 	if (!str[i])
 		return (free(str), NULL);
 	i++;
-	new = malloc(ft_strlen(str + i) + 1);
+	len = ft_strlen(str + i);
+	new = malloc(len + 1);
 	if (!new)
-		return (NULL);
+		return (free(str), NULL);
 	while (str[i])
 		new[j++] = str[i++];
 	new[j] = '\0';
@@ -106,6 +111,12 @@ char	*get_next_line(int fd)
 	if (!stash)
 		return (NULL);
 	line = extract_line(stash);
+	if (!line)
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
 	stash = update_stash(stash);
 	return (line);
 }
